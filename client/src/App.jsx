@@ -7,29 +7,47 @@ function App() {
   const [data, setData] = useState([]);
   const [latest, setLatest] = useState(null);
 
+  // Fetch all entries
   const fetchData = async () => {
-    const res = await axios.get("http://localhost:5000/api/data");
-    setData(res.data);
-    if (res.data.length) setLatest(res.data[0]);
+    try {
+      const res = await axios.get("/api/data"); // Relative path for Render
+      setData(res.data);
+      if (res.data.length) setLatest(res.data[0]);
+    } catch (err) {
+      console.error("Error fetching data:", err);
+    }
   };
 
-  useEffect(() => { fetchData(); }, []);
+  useEffect(() => {
+    fetchData();
+  }, []);
 
+  // Add new URL
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!url) return;
-    const res = await axios.post("http://localhost:5000/api/data", { url });
-    setData([res.data, ...data]);
-    setLatest(res.data);
-    setUrl("");
+    try {
+      const res = await axios.post("/api/data", { url }); // Relative path
+      setData([res.data, ...data]);
+      setLatest(res.data);
+      setUrl("");
+    } catch (err) {
+      console.error("Error adding data:", err);
+    }
   };
 
+  // Delete an entry
   const handleDelete = async (id) => {
-    await axios.delete(`http://localhost:5000/api/data/${id}`);
-    setData(data.filter(d => d.id !== id));
+    try {
+      await axios.delete(`/api/data/${id}`); // Relative path
+      setData(data.filter(d => d.id !== id));
+    } catch (err) {
+      console.error("Error deleting data:", err);
+    }
   };
 
-  const formatDate = (d) => new Date(d).toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" });
+  const formatDate = (d) =>
+    new Date(d).toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" });
 
   return (
     <div className="app-container">
@@ -48,15 +66,21 @@ function App() {
         <button className="url-button">Check</button>
       </form>
 
-      {/* Latest Result Section */}
+      {/* Latest Result */}
       {latest && (
         <div className="result-card">
           <div className="rating">{latest.rating}</div>
           <h2 className="result-url">Website carbon results for: {latest.url}</h2>
           <p className="result-text">Hurrah! This web page achieves a carbon rating of {latest.rating}</p>
-          <p className="result-text">This is cleaner than <span className="percent">{latest.percentCleaner}%</span> of all web pages globally</p>
-          <p className="result-text">This page was last tested on {formatDate(latest.date)}. <button className="test-again">Test again</button></p>
-          <p className="result-text">Only <span className="carbon-value">{latest.carbon}g</span> of CO2 is produced every time someone visits this web page.</p>
+          <p className="result-text">
+            This is cleaner than <span className="percent">{latest.percentCleaner}%</span> of all web pages globally
+          </p>
+          <p className="result-text">
+            This page was last tested on {formatDate(latest.date)}. <button className="test-again">Test again</button>
+          </p>
+          <p className="result-text">
+            Only <span className="carbon-value">{latest.carbon}g</span> of CO2 is produced every time someone visits this web page.
+          </p>
 
           <div className="yearly-impact">
             <h3>Over a year, with 10,000 monthly page views:</h3>
