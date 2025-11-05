@@ -1,1 +1,5 @@
 {"id":1762382629548,"url":"https://www.youtube.com/watch?v=i4oelVlDJZc&list=RDi4oelVlDJZc&start_radio=1","carbon":0.513,"rating":"B","percentCleaner":100,"date":"2025-11-05T22:43:49.548Z"}
+{"id":1762383379191,"url":"https://dashboard.render.com/","carbon":0.546,"rating":"B","percentCleaner":"0","date":"2025-11-05T22:56:19.191Z"}
+{"id":1762383410305,"url":"https://www.youtube.com/","carbon":0.939,"rating":"C","percentCleaner":"0","date":"2025-11-05T22:56:50.305Z"}
+{"id":1762383430440,"url":"https://www.facebook.com/","carbon":0.124,"rating":"A+","percentCleaner":"100","date":"2025-11-05T22:57:10.440Z"}
+{"id":1762383489087,"url":"https://github.com/saadMarjuk","carbon":0.113,"rating":"A+","percentCleaner":"100","date":"2025-11-05T22:58:09.087Z"}

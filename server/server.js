@@ -10,17 +10,17 @@ const DATA_FILE = path.join(__dirname, "data.txt");
 app.use(cors());
 app.use(express.json());
 
-// Serve React build
-app.use(express.static(path.join(__dirname, "../client/build")));
+// Serve Vite build files
+app.use(express.static(path.join(__dirname, "client/dist")));
 
-app.get("/", (req, res) => {
-  res.sendFile(path.join(__dirname, "../client/build/index.html"));
+app.get("*", (req, res) => {
+  res.sendFile(path.join(__dirname, "client/dist", "index.html"));
 });
 
 // API routes
 app.get("/api/data", (req, res) => {
   if (!fs.existsSync(DATA_FILE)) return res.json([]);
-  const lines = fs.readFileSync(DATA_FILE, "utf-8").trim().split("\n").map(JSON.parse);
+  const lines = fs.readFileSync(DATA_FILE, "utf-8").trim().split("\n").map(l => JSON.parse(l));
   res.json(lines.reverse());
 });
 
@@ -31,10 +31,7 @@ app.post("/api/data", (req, res) => {
   const carbon = parseFloat((Math.random() * 1).toFixed(3));
   const rating = carbon < 0.2 ? "A+" : carbon < 0.4 ? "A" : carbon < 0.6 ? "B" : "C";
 
-  const lines = fs.existsSync(DATA_FILE)
-    ? fs.readFileSync(DATA_FILE, "utf-8").trim().split("\n").map(JSON.parse)
-    : [];
-
+  const lines = fs.existsSync(DATA_FILE) ? fs.readFileSync(DATA_FILE, "utf-8").trim().split("\n").map(l => JSON.parse(l)) : [];
   const higher = lines.filter(e => parseFloat(e.carbon) > carbon).length;
   const percentCleaner = lines.length ? ((higher / lines.length) * 100).toFixed(0) : 100;
 
@@ -48,10 +45,10 @@ app.delete("/api/data/:id", (req, res) => {
   if (!fs.existsSync(DATA_FILE)) return res.status(404).json({ error: "No data" });
 
   const id = parseInt(req.params.id);
-  const lines = fs.readFileSync(DATA_FILE, "utf-8").trim().split("\n").map(JSON.parse);
+  const lines = fs.readFileSync(DATA_FILE, "utf-8").trim().split("\n").map(l => JSON.parse(l));
   const newLines = lines.filter(l => l.id !== id);
 
-  fs.writeFileSync(DATA_FILE, newLines.map(JSON.stringify).join("\n") + "\n");
+  fs.writeFileSync(DATA_FILE, newLines.map(l => JSON.stringify(l)).join("\n") + "\n");
   res.json({ success: true });
 });
 
